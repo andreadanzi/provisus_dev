@@ -372,6 +372,9 @@ class PDFMaker extends CRMEntity {
 	$viewid = $customView->getViewId($module);
 	$log->debug("Entering GetPreparedMPDF(module=".$module.", viewid=".$viewid.") method ...");
 	// danzi.tn@20140102-1e
+    // danzi.tn@20141105-1 project reference
+    $last_record_id = 0;
+    // danzi.tn@20141105-1e
         $focus = CRMEntity::getInstance($module);
         $TemplateContent = array();
         $name = '';
@@ -390,7 +393,7 @@ class PDFMaker extends CRMEntity {
             else
                 $focus->retrieve_entity_info($record, $module);
             $focus->id = $record;
-
+            $last_record_id = $record;
             foreach ($templates AS $templateid) {
                 $PDFContent = $this->GetPDFContentRef($templateid, $module, $focus, $language);
 
@@ -489,7 +492,7 @@ class PDFMaker extends CRMEntity {
                         $replace = str_ireplace('$CRIDX$', $cridx++, $replace);
                     }
 		    $tmptable .= "</table>";
-		    $tots = $this->_parse_body($tmptable,$templateid);
+		    $tots = $this->_parse_body($tmptable,$templateid,$last_record_id,$module);
 		    // danzi.tn@20140102-2e
                     $body_html = str_replace($text, $replace, $body_html);
                 }
@@ -552,7 +555,7 @@ class PDFMaker extends CRMEntity {
     }
     
     // danzi.tn@20140102-3
-    private function _parse_body($html,$templateid) {
+    private function _parse_body($html,$templateid, $last_record_id, $module) {
 	global $log;
 	$log->debug( "Entering _parse_body templateid=".$templateid);
 	$xml = new DOMDocument();
@@ -586,7 +589,11 @@ class PDFMaker extends CRMEntity {
 	$log->debug( "Exiting _parse_body tot. ore=".$ore.";tot. km=".$km);
 	$f_ore = its4you_formatNumberToPDF($ore);
 	$f_km = $km;
-	return array('DANZI_HOURS'=>$f_ore,'DANZI_KM'=>$f_km, 'DANZI_PERIODO'=>$periodo);
+    $project_name = "";
+    if($module=="HelpDesk") {
+        global $adb;
+    }
+	return array('DANZI_HOURS'=>$f_ore,'DANZI_KM'=>$f_km, 'DANZI_PERIODO'=>$periodo, 'DANZI_R_PROGETTO'=>$project_name);
     }
     // danzi.tn@20140102-3e
     

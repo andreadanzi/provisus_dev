@@ -1,9 +1,8 @@
 AddHandler php5-cgi .php
 
 <IfModule mod_php5.c>
-php_value max_execution_time 1000
+php_value max_execution_time 600
 php_value log_errors Off
 php_value error_reporting 2
-php_value max_input_vars 6000
 </IfModule>
 
