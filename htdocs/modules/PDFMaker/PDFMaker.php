@@ -555,7 +555,7 @@ class PDFMaker extends CRMEntity {
     }
     
     // danzi.tn@20140102-3
-    private function _parse_body($html,$templateid, $last_record_id, $module) {
+    private function _parse_body($html,$templateid, $last_record_id=0, $printmodule="") {
 	global $log;
 	$log->debug( "Entering _parse_body templateid=".$templateid);
 	$xml = new DOMDocument();
@@ -589,10 +589,34 @@ class PDFMaker extends CRMEntity {
 	$log->debug( "Exiting _parse_body tot. ore=".$ore.";tot. km=".$km);
 	$f_ore = its4you_formatNumberToPDF($ore);
 	$f_km = $km;
+	// danzi.tn@20141105-2 recupero delle informazioni di progetto
     $project_name = "";
-    if($module=="HelpDesk") {
-        global $adb;
+    if($printmodule=="HelpDesk" && $last_record_id > 0) {
+		$log->debug( "_parse_body on HelpDesk  last_record_id=".$last_record_id);
+        global $adb;		
+		// $last_record_id è l'ultimo record della lista HelpDesk
+		$sql = "SELECT 
+				vtiger_troubletickets.ticket_no,
+				vtiger_troubletickets.title,
+				vtiger_troubletickets.ticketid,
+				vtiger_project.project_no,
+				vtiger_project.projectname,
+				vtiger_project.projectid
+				FROM
+				vtiger_troubletickets
+				JOIN vtiger_crmentity tt_entity ON tt_entity.crmid = vtiger_troubletickets.ticketid AND tt_entity.deleted = 0
+				JOIN vtiger_crmentityrel ON vtiger_crmentityrel.relcrmid = vtiger_troubletickets.ticketid AND vtiger_crmentityrel.module = 'Project' AND vtiger_crmentityrel.relmodule = 'HelpDesk' 
+				JOIN vtiger_crmentity project_entity ON project_entity.crmid = vtiger_crmentityrel.crmid AND project_entity.deleted = 0
+				JOIN vtiger_project ON vtiger_project.projectid = project_entity.crmid
+				WHERE
+				vtiger_troubletickets.ticketid = ?";
+		$log->debug( "_parse_body sql for project:".$sql);
+		$res = $adb->pquery($sql,array($last_record_id));
+		while ($row = $adb->fetchByAssoc($res)) {
+			$project_name = $row['projectname'];
+		}
     }
+	// danzi.tn@20141105-2e
 	return array('DANZI_HOURS'=>$f_ore,'DANZI_KM'=>$f_km, 'DANZI_PERIODO'=>$periodo, 'DANZI_R_PROGETTO'=>$project_name);
     }
     // danzi.tn@20140102-3e
