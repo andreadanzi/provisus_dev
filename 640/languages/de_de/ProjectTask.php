@@ -7,6 +7,7 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
+ // danzi.tn@20160622 fix traduzioni
 $languageStrings = array(
 	'SINGLE_ProjectTask'	=>	"Projektaufgabe",
 	'LBL_ADD_RECORD'	=>	"In Projektaufgabe",
@@ -36,9 +37,9 @@ $languageStrings = array(
 	'Modified Time'	=>	"Geändert Zeit",
 	'description'	=>	"Beschreibung",
 	'Assigned To'	=>	"Zuständig",
-	'Open'	=>	"Öffnen",
-	'In Progress'	=>	"in uitvoering",
+	'Open'	=>	"Offen",
+	'In Progress'	=>	"In Bearbeitung",
 	'Completed'	=>	"Fertiggestellt",
-	'Deferred'	=>	"Latente",
-	'Canceled'	=>	"Gestrichen",
+	'Deferred'	=>	"Latent",
+	'Canceled'	=>	"Annulliert",
 );

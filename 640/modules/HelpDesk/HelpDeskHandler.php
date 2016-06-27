@@ -20,9 +20,28 @@ class HelpDeskHandler extends VTEventHandler {
 			if ($moduleName == 'HelpDesk') {
 				$ticketId = $entityData->getId();
 				$adb->pquery('UPDATE vtiger_ticketcf SET from_portal=0 WHERE ticketid=?', array($ticketId));
+                helpDesk_checkRelatedTo($ticketId, $entityData->focus); 
 			}
 		}
 	}
+}
+// danzi.tn@20160627 Check Related To
+function helpDesk_checkRelatedTo($ticketId, $focus) {
+    $adb = PearDatabase::getInstance();
+    $project_id = $focus->column_fields['project_id'];
+    $parent_id = $focus->column_fields['parent_id'];
+    $projecttype = $focus->column_fields['projecttype'];
+    if($project_id && ( $parent_id ==0 || empty($projecttype) ))  {
+        $sql="UPDATE 
+                vtiger_troubletickets
+                JOIN vtiger_project on vtiger_project.projectid = vtiger_troubletickets.project_id
+                SET
+                vtiger_troubletickets.parent_id =  vtiger_project.linktoaccountscontacts,
+                vtiger_troubletickets.projecttype = vtiger_project.projecttype
+                WHERE
+                vtiger_troubletickets.ticketid = ?";
+        $result = $adb->pquery($sql,array($ticketId ));
+    }
 }
 
 function HelpDesk_nofifyOnPortalTicketCreation($entityData) {

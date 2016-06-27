@@ -224,7 +224,8 @@ jQuery.Class("Vtiger_Detail_Js",{
 		'Contacts' : 'contact_id',
 		'Leads' : 'parent_id',
 		'Potentials' : 'parent_id',
-		'HelpDesk' : 'parent_id'
+		'HelpDesk' : 'parent_id',		
+        'Project' : 'project_id'
 	},
 
 	//constructor
@@ -1244,8 +1245,15 @@ jQuery.Class("Vtiger_Detail_Js",{
 			var quickCreateNode = jQuery('#quickCreateModules').find('[data-name="'+ referenceModuleName +'"]');
 			var fieldName = thisInstance.referenceFieldNames[module];
 
+
+            
 			var customParams = {};
 			customParams[fieldName] = recordId;
+            if(referenceModuleName =='HelpDesk' && module=="Project") {
+                var formElement = thisInstance.getForm();
+                var formData = formElement.serializeFormData();
+                customParams["projecttype"] = formData["projecttype"];
+            }
 
 			if(quickCreateNode.length <= 0) {
 				Vtiger_Helper_Js.showPnotify(app.vtranslate('JS_NO_CREATE_OR_NOT_QUICK_CREATE_ENABLED'))

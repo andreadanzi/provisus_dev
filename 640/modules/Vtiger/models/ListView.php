@@ -158,6 +158,7 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model {
 		$db = PearDatabase::getInstance();
 
 		$moduleName = $this->getModule()->get('name');
+
 		$moduleFocus = CRMEntity::getInstance($moduleName);
 		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 
@@ -187,10 +188,16 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model {
 
 		//List view will be displayed on recently created/modified records
 		if(empty($orderBy) && empty($sortOrder) && $moduleName != "Users"){
-			$orderBy = 'modifiedtime';
-			$sortOrder = 'DESC';
+            
+            if( $moduleName=='HelpDesk' ){
+                $orderBy = 'cf_649';
+                $sortOrder = 'DESC';
+            }else{
+                $orderBy = 'modifiedtime';
+                $sortOrder = 'DESC';
+            }
+            //danzi.tn@20160622e
 		}
-
         if(!empty($orderBy)){
             $columnFieldMapping = $moduleModel->getColumnFieldMapping();
             $orderByFieldName = $columnFieldMapping[$orderBy];
