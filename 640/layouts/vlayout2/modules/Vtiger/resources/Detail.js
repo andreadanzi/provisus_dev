@@ -1252,6 +1252,7 @@ jQuery.Class("Vtiger_Detail_Js",{
             if(referenceModuleName =='HelpDesk' && module=="Project") {
                 var formElement = thisInstance.getForm();
                 var formData = formElement.serializeFormData();
+                // customParams["parent_id"] = 0;// formData["linktoaccountscontacts"];
                 customParams["projecttype"] = formData["projecttype"];
             }
 
