@@ -214,7 +214,7 @@ class Vtiger_RelationListView_Model extends Vtiger_Base_Model {
 		$orderBy = $this->getForSql('orderby');
 		$sortOrder = $this->getForSql('sortorder');
         // danzi.tn@20160628 orderby datum related list
-        if( $relationModuleName=='HelpDesk' ){
+        if( empty($orderBy) && $relationModuleName=='HelpDesk' ){
             $orderBy = 'cf_649';
             $sortOrder = 'DESC';
         }
