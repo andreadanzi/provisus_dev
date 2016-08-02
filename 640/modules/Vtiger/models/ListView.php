@@ -191,7 +191,7 @@ class Vtiger_ListView_Model extends Vtiger_Base_Model {
             
             if( $moduleName=='HelpDesk' ){
                 $orderBy = 'cf_649';
-                $sortOrder = 'DESC';
+                $sortOrder = 'ASC'; // danzi.tn@20160802 TT135 Stampa "Resoconto ore"
             }else{
                 $orderBy = 'modifiedtime';
                 $sortOrder = 'DESC';
